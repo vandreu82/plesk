@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Suscripción</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 400px; margin: auto; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Suscripción</h1>
+        <form id="subscriptionForm">
+            <input type="text" id="name" name="name" placeholder="Nombre" required>
+            <input type="email" id="email" name="email" placeholder="Correo Electrónico" required>
+            <input type="text" id="login" name="login" placeholder="Nombre de Usuario" required>
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+            <input type="text" id="domain" name="domain" placeholder="Dominio" required>
+            <select id="plan" name="plan" required>
+                <option value="">Seleccione un plan</option>
+                <option value="barato">Básico</option>
+                <option value="menos barato">Avanzado</option>
+                <option value="carete">Premium</option>
+            </select>
+            <button type="submit">Suscribirse</button>
+        </form>
+        <p id="responseMessage"></p>
+    </div>
+    
+    <script>
+        document.getElementById('subscriptionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch('controller.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageElement = document.getElementById('responseMessage');
+                if (data.success) {
+                    messageElement.style.color = 'green';
+                    messageElement.textContent = data.message;
+                } else {
+                    messageElement.style.color = 'red';
+                    messageElement.textContent = data.error;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
